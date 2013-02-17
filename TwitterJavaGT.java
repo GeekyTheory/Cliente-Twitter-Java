@@ -4,8 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.net.URISyntaxException;
 import twitter4j.Paging;
 import twitter4j.ResponseList;
 import twitter4j.Status;
@@ -24,7 +23,7 @@ public class TwitterJavaGT {
         BufferedReader lecturaTeclado = null;
         try {
             // Apertura del fichero y creacion de BufferedReader
-            archivo = new File("/home/mario/auth_file.txt");
+            archivo = new File(System.getProperty("user.home")+"/auth_file.txt".replace("\\","/"));
             fileR = new FileReader(archivo);
             lecturaTeclado = new BufferedReader(fileR);
             // Lectura del fichero
@@ -32,10 +31,10 @@ public class TwitterJavaGT {
             int n = 1;
             while ((linea = lecturaTeclado.readLine()) != null) {
                 if (n == 1) { //La primera línea es el Access Token
-                    System.out.println(linea);
+                    //System.out.println(linea);
                     Token = linea;
                 } else if (n == 2) { //La segunda línea es el Access Token Secret
-                    System.out.println(linea);
+                    //System.out.println(linea);
                     TokenSecret = linea;
                 }
                 n++;
@@ -44,7 +43,7 @@ public class TwitterJavaGT {
             e.printStackTrace();
         } finally {
             // En el finally cerramos el fichero, para asegurarnos
-            // que se cierra tanto si todo va bien como si salta 
+            // que se cierra tanto si todo va bien como si salta
             // una excepción.
             try {
                 if (null != fileR) {
@@ -54,9 +53,9 @@ public class TwitterJavaGT {
                 e2.printStackTrace();
             }
         }
-        configBuilder.setDebugEnabled(true)
-                .setOAuthConsumerKey("XXXXXXXXXX")
-                .setOAuthConsumerSecret("XXXXXXXXXXX")
+            configBuilder.setDebugEnabled(true)
+                    .setOAuthConsumerKey(new Tokens().OAuthConsumerKey)
+                    .setOAuthConsumerSecret(new Tokens().OAuthConsumerSecret)
                 .setOAuthAccessToken(Token)
                 .setOAuthAccessTokenSecret(TokenSecret);
         twitter = new TwitterFactory(configBuilder.build()).getInstance();
@@ -68,14 +67,13 @@ public class TwitterJavaGT {
             System.out.println(listado.get(i).getText());
         }
         //Actualizar tu estado
-        Status tweetEscrito = twitter.updateStatus("[TUTORIAL] Twitter+Java @geekytheory www.geekytheory.com");  	
+        //Status tweetEscrito = twitter.updateStatus("[TUTORIAL] Twitter+Java @geekytheory www.geekytheory.com");
     }
-    public static void main(String ar[]) throws TwitterException {
-        try {
-            Autorizacion aut = new Autorizacion();
-        } catch (IOException | TwitterException ex) {
-            Logger.getLogger(TwitterJavaGT.class.getName()).log(Level.SEVERE, null, ex);
+    public static void main(String ar[]) throws TwitterException, IOException, URISyntaxException {
+        try{
+            TwitterJavaGT twitter = new TwitterJavaGT();
+        } catch(TwitterException ex){
+            AutorizacionVentana auth=new AutorizacionVentana();
         }
-        TwitterJavaGT twitter = new TwitterJavaGT();
     }
 }
