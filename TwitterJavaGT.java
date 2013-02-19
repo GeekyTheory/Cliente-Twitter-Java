@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import twitter4j.Paging;
 import twitter4j.ResponseList;
@@ -13,7 +14,7 @@ import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
 import twitter4j.conf.ConfigurationBuilder;
 public class TwitterJavaGT {
-    TwitterJavaGT() throws TwitterException {
+    TwitterJavaGT() throws TwitterException, MalformedURLException {
         Twitter twitter;
         ConfigurationBuilder configBuilder = new ConfigurationBuilder();
         String Token = new String(); //Los almaceno en un string, ya que pueden variar según la cuenta
@@ -60,12 +61,9 @@ public class TwitterJavaGT {
                 .setOAuthAccessTokenSecret(TokenSecret);
         twitter = new TwitterFactory(configBuilder.build()).getInstance();
         //Recuperar listado de ultimos tweets escritos
-        Paging pagina = new Paging();
-        pagina.setCount(50);
-        ResponseList<Status> listado = twitter.getHomeTimeline(pagina);
-        for (int i = 0; i < listado.size(); i++) {
-            System.out.println(listado.get(i).getText());
-        }
+        
+        
+        TwitterFrame ventana=new TwitterFrame(twitter);
         //Actualizar tu estado
         //Status tweetEscrito = twitter.updateStatus("[TUTORIAL] Twitter+Java @geekytheory www.geekytheory.com");
     }
