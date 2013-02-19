@@ -4,11 +4,15 @@
  */
 package twitterjavagt;
 
+import java.awt.Desktop;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import twitter4j.Twitter;
@@ -20,7 +24,7 @@ import twitter4j.conf.ConfigurationBuilder;
 
 /**
  *
- * @author Mario Pérez
+ * @author mario
  */
 public class AutorizacionVentana extends javax.swing.JFrame {
 
@@ -32,7 +36,7 @@ public class AutorizacionVentana extends javax.swing.JFrame {
         AccessToken accessToken = null;
         String url = null;
         Twitter OAuthTwitter;
-    public AutorizacionVentana() throws TwitterException {
+    public AutorizacionVentana() throws TwitterException, URISyntaxException, IOException {
         initComponents();
         setTitle("Ventana de autorización");
         setVisible(true);
@@ -57,12 +61,14 @@ public class AutorizacionVentana extends javax.swing.JFrame {
             }
             BufferedReader lectorTeclado = new BufferedReader(new InputStreamReader(System.in));
             //Abro el navegador.
+            
+            Desktop.getDesktop().browse(new URI(url));
 
-            Runtime runtime = Runtime.getRuntime();
+            /*Runtime runtime = Runtime.getRuntime();
             try {
                 runtime.exec("firefox " + url);
             } catch (Exception e) {
-            }
+            }*/
             //Nos avisa de que introduciremos el PIN a continuación
             System.out.print("Introduce el PIN del navegador y pulsa intro.\n\n PIN: ");
             //Leemos el PIN
@@ -182,7 +188,11 @@ public class AutorizacionVentana extends javax.swing.JFrame {
             } catch (IOException e) {
             }
                 try {
+                try {
                     TwitterJavaGT cliente=new TwitterJavaGT();
+                } catch (MalformedURLException ex) {
+                    Logger.getLogger(AutorizacionVentana.class.getName()).log(Level.SEVERE, null, ex);
+                }
                     dispose();
                 } catch (TwitterException ex) {
                     Logger.getLogger(AutorizacionVentana.class.getName()).log(Level.SEVERE, null, ex);
@@ -223,12 +233,15 @@ public class AutorizacionVentana extends javax.swing.JFrame {
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
+            @Override
             public void run() {
-                try {
-                    new AutorizacionVentana().setVisible(true);
-                } catch (TwitterException ex) {
-                    Logger.getLogger(AutorizacionVentana.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                
+                    try {
+                        new AutorizacionVentana().setVisible(true);
+                    } catch (            TwitterException | URISyntaxException | IOException ex) {
+                        Logger.getLogger(AutorizacionVentana.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+               
             }
         });
     }
